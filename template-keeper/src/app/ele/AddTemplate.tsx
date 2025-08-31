@@ -1,18 +1,21 @@
 "use client";
 import { useState, useContext, useId } from "react";
-import { TemplateContext, AddTemplateContext, CategoryContext, SearchContext, SetActiveIDX } from "../../boards/Template";
+import { TemplateContextID, AddTemplateContext, CategoryContext, SearchContext, SetActiveIDX } from "../../boards/Template";
 import { saveTemplate } from "../backend/savingTemplates";
 import { getTemplateDir } from "../backend/directory";
 import loadTemplates from "../backend/loadingTemplates";
 import { Data, DataType } from "../../boards/Template";
+import { LinesContext } from "./TemplateArea";
 
 export default function AddTemplateBox() {
     const { open, setOpen } = useContext(AddTemplateContext);
-    const { template, setTemplate } = useContext(TemplateContext);
+    const { templateID, setTemplateID } = useContext(TemplateContextID);
     const { category, setCategory } = useContext(CategoryContext);
     const { searchTerm, setSearchTerm } = useContext(SearchContext);
     const { activeIdx, setActiveIdx } = useContext(SetActiveIDX);
     const { data, setData } = useContext(Data);
+    const { lines, setLines } = useContext(LinesContext);
+
     if (!data) return <div>Loading...</div>;
 
     const [addCategory, setAddCategory] = useState("-");
@@ -94,7 +97,7 @@ Title three
                             setOpen(false);
                             const updatedTemplates = await loadTemplates();
                             setData(updatedTemplates);
-                            setTemplate(label);
+                            setTemplateID(data.length + 1);
                             setCategory(chosenCategory);
                             setSearchTerm("");
                             setLabel("");

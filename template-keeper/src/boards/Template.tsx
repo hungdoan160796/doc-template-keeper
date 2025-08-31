@@ -27,9 +27,9 @@ export const CategoryContext = createContext({
     setCategory: (_v: string) => { }
 })
 
-export const TemplateContext = createContext({
-    template: "-",
-    setTemplate: (_v: string) => { }
+export const TemplateContextID = createContext({
+    templateID: 0,
+    setTemplateID: (_v: number) => { }
 })
 
 export const AddTemplateContext = createContext({
@@ -49,7 +49,7 @@ export const SetActiveIDX = createContext({
 
 export default function Template() {
     const [data, setData] = useState(LoadedTemplates);
-    const [template, setTemplate] = useState("-");
+    const [templateID, setTemplateID] = useState(0);
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState("-");
     const [searchTerm, setSearchTerm] = useState("");
@@ -59,7 +59,7 @@ export default function Template() {
         <h1 className="text-2xl md:text-3xl">Select a Template</h1>
         <div className="flex flex-col md:flex-row gap-2 w-[100%]">
             <Data.Provider value={{ data, setData }}>
-                <TemplateContext.Provider value={{ template, setTemplate }}>
+                <TemplateContextID.Provider value={{ templateID, setTemplateID }}>
                     <AddTemplateContext.Provider value={{ open, setOpen }}>
                         <CategoryContext.Provider value={{ category, setCategory }}>
                             <SetActiveIDX.Provider value={{ activeIdx, setActiveIdx }}>
@@ -71,7 +71,7 @@ export default function Template() {
                             </SetActiveIDX.Provider>
                         </CategoryContext.Provider>
                     </AddTemplateContext.Provider>
-                </TemplateContext.Provider>
+                </TemplateContextID.Provider>
             </Data.Provider>
         </div>
     </div >

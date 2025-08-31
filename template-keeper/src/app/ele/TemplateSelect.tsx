@@ -2,17 +2,19 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import CategorySelect from "./CategorySelect";
 import { useContext } from "react";
-import { TemplateContext, CategoryContext, SearchContext, SetActiveIDX } from "../../boards/Template";
+import { TemplateContextID, CategoryContext, SearchContext, SetActiveIDX } from "../../boards/Template";
 import { DataType, Data } from "../../boards/Template";
 import { deleteAllTemplates, deleteTemplate } from "../backend/deletingTemplates";
 import loadTemplates from "../backend/loadingTemplates";
+import { LinesContext } from "./TemplateArea";
 
 export default function TemplateSelect() {
-  const { template, setTemplate } = useContext(TemplateContext);
+  const { templateID, setTemplateID } = useContext(TemplateContextID);
   const { category, setCategory } = useContext(CategoryContext);
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
   const { activeIdx, setActiveIdx } = useContext(SetActiveIDX);
   const { data, setData } = useContext(Data);
+  const { lines, setLines } = useContext(LinesContext);
   if (!data) return <div>Loading...</div>;
 
   // Normalize to {id,label,sub}
@@ -41,7 +43,7 @@ export default function TemplateSelect() {
       setActiveIdx(Math.max(activeIdx - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      setTemplate(filtered[activeIdx].label);
+      setTemplateID(activeIdx);
     }
   };
 
@@ -94,7 +96,10 @@ export default function TemplateSelect() {
                   role="option"
                   aria-selected={idx === activeIdx}
                   onMouseEnter={() => setActiveIdx(idx)}
-                  onClick={() => setTemplate(item.label)}
+                  onClick={() => {
+                    setTemplateID(item.id);
+                    setLines({});
+                  }}
                   className={`flex flex-row justify-between px-3 py-2 cursor-pointer ${idx === activeIdx ? "bg-gray-100" : ""
                     }`}
                 >
@@ -105,7 +110,7 @@ export default function TemplateSelect() {
                       await deleteTemplate(item.id);
                       const updatedTemplates = await loadTemplates();
                       setData(updatedTemplates);
-                      setTemplate("-");
+                      setTemplateID(0);
                       setSearchTerm("");
                       setCategory("Select Category");
                     }}
@@ -129,9 +134,10 @@ export default function TemplateSelect() {
             <button
               type="button"
               onClick={async () => {
+                await deleteAllTemplates();
                 const updatedTemplates = await loadTemplates();
                 setData(updatedTemplates);
-                setTemplate("-");
+                setTemplateID(0);
                 setSearchTerm("");
                 setCategory("Select Category");
               }}

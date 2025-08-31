@@ -1,8 +1,8 @@
 "use client";
 import { useContext } from "react";
 import { } from "./TemplateSelect";
-import { AddTemplateContext, CategoryContext } from "../../boards/Template";
-import { Data } from "../../boards/Template";
+import { AddTemplateContext, CategoryContext } from "../../../boards/Templates";
+import { Data } from "../../../boards/Templates";
 
 
 export default function CategorySelect() {

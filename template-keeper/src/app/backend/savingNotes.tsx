@@ -1,7 +1,7 @@
 // savingNotes.tsx
 import { getNotesDir } from "./directoryNotes";
 
-export async function saveNote(obj: { id: number; fields: object; category: string; label?: string }) {
+export async function saveNote(obj: { id: number; fields: Array<string>; lines: Array<string>; category: string; label?: string }) {
   const dir = await getNotesDir();
   if (!dir) {
     alert("Saving notes isn’t available (permission not granted or unsupported).");
@@ -12,7 +12,8 @@ export async function saveNote(obj: { id: number; fields: object; category: stri
   const baseName = (obj?.label ?? "Untitled").toString().trim() || "Untitled";
   const safeName = baseName.replace(/[\\/:*?"<>|]/g, "_");
   const handle = await dir.getFileHandle(`${safeName}.json`, { create: true });
-  const fields = obj.fields || {};
+  const fields = obj.fields || [] as Array<string>;
+  const lines = obj.lines ||  [] as Array<string>;
 
   const payload = {
     id:
@@ -23,6 +24,7 @@ export async function saveNote(obj: { id: number; fields: object; category: stri
     label: baseName,
     category,
     fields: fields,
+    lines: lines,
   };
 
   const writable = await handle.createWritable();

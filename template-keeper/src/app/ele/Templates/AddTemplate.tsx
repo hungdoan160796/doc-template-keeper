@@ -1,11 +1,11 @@
 "use client";
 import { useState, useContext, useId } from "react";
-import { TemplateContextID, AddTemplateContext, CategoryContext, SearchContext, SetActiveIDX } from "../../boards/Template";
-import { saveTemplate } from "../backend/savingTemplates";
-import { getTemplateDir } from "../backend/directory";
-import loadTemplates from "../backend/loadingTemplates";
-import { Data, DataType } from "../../boards/Template";
-import { LinesContext } from "./TemplateArea";
+import { TemplateContextID, AddTemplateContext, CategoryContext, SearchContext, SetActiveIDX } from "../../../boards/Templates";
+import { saveTemplate } from "../../backend/savingTemplates";
+import { getTemplateDir } from "../../backend/directory";
+import loadTemplates from "../../backend/loadingTemplates";
+import { Data, DataType } from "../../../boards/Templates";
+import { LinesContext } from "../../../boards/Templates";
 
 export default function AddTemplateBox() {
     const { open, setOpen } = useContext(AddTemplateContext);
@@ -95,6 +95,9 @@ Title three
                             }
                             await saveTemplate({ id: data.length + 1, text: fields, category: chosenCategory, label: label });
                             setOpen(false);
+                            const lines = {} as Array<string>;
+                            fields.split("\n").forEach((field, i) => lines[i] = "")
+                            setLines(lines);
                             const updatedTemplates = await loadTemplates();
                             setData(updatedTemplates);
                             setTemplateID(data.length + 1);

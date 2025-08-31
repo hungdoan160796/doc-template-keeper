@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import TemplateSelect from "../app/ele/TemplateSelect";
-import TemplateArea from "../app/ele/TemplateArea";
+import TemplateSelect from "../app/ele/Templates/TemplateSelect";
+import TemplateArea from "../app/ele/Templates/TemplateArea";
 import { useState } from "react";
 import { createContext } from "react";
-import AddTemplateBox from "@/app/ele/AddTemplate";
+import AddTemplateBox from "@/app/ele/Templates/AddTemplate";
 import loadTemplates from "../app/backend/loadingTemplates";
 
 export type DataType = {
@@ -47,32 +47,37 @@ export const SetActiveIDX = createContext({
     setActiveIdx: (_v: number) => { }
 })
 
-export default function Template() {
+export const LinesContext = createContext({
+    lines: [] as Array<string>,
+    setLines: (_v: Array<string>) => { }
+})
+
+export default function Templates() {
     const [data, setData] = useState(LoadedTemplates);
     const [templateID, setTemplateID] = useState(0);
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState("-");
     const [searchTerm, setSearchTerm] = useState("");
     const [activeIdx, setActiveIdx] = useState(0);
+    const [lines, setLines] = useState<Array<string>>([]);
 
-    return <div className="flex flex-col gap-[32px] row-start-2 items-start justify-start md:items-start border-amber-200 border-2 w-[100%] h-full">
-        <h1 className="text-2xl md:text-3xl">Select a Template</h1>
-        <div className="flex flex-col md:flex-row gap-2 w-[100%]">
-            <Data.Provider value={{ data, setData }}>
-                <TemplateContextID.Provider value={{ templateID, setTemplateID }}>
-                    <AddTemplateContext.Provider value={{ open, setOpen }}>
-                        <CategoryContext.Provider value={{ category, setCategory }}>
-                            <SetActiveIDX.Provider value={{ activeIdx, setActiveIdx }}>
+    return <div className="flex flex-col md:flex-row gap-8 row-start-2 items-start justify-start md:items-start w-[100%] h-full">
+        <Data.Provider value={{ data, setData }}>
+            <TemplateContextID.Provider value={{ templateID, setTemplateID }}>
+                <AddTemplateContext.Provider value={{ open, setOpen }}>
+                    <CategoryContext.Provider value={{ category, setCategory }}>
+                        <SetActiveIDX.Provider value={{ activeIdx, setActiveIdx }}>
+                            <LinesContext.Provider value={{ lines, setLines }}>
                                 <SearchContext.Provider value={{ searchTerm, setSearchTerm }}>
                                     <TemplateSelect />
                                     <TemplateArea />
                                     <AddTemplateBox />
                                 </SearchContext.Provider>
-                            </SetActiveIDX.Provider>
-                        </CategoryContext.Provider>
-                    </AddTemplateContext.Provider>
-                </TemplateContextID.Provider>
-            </Data.Provider>
-        </div>
-    </div >
+                            </LinesContext.Provider>
+                        </SetActiveIDX.Provider>
+                    </CategoryContext.Provider>
+                </AddTemplateContext.Provider>
+            </TemplateContextID.Provider>
+        </Data.Provider>
+    </div>
 }

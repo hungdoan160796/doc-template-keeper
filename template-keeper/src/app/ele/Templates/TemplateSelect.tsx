@@ -2,11 +2,11 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import CategorySelect from "./CategorySelect";
 import { useContext } from "react";
-import { TemplateContextID, CategoryContext, SearchContext, SetActiveIDX } from "../../boards/Template";
-import { DataType, Data } from "../../boards/Template";
-import { deleteAllTemplates, deleteTemplate } from "../backend/deletingTemplates";
-import loadTemplates from "../backend/loadingTemplates";
-import { LinesContext } from "./TemplateArea";
+import { TemplateContextID, CategoryContext, SearchContext, SetActiveIDX } from "../../../boards/Templates";
+import { DataType, Data } from "../../../boards/Templates";
+import { deleteAllTemplates, deleteTemplate } from "../../backend/deletingTemplates";
+import loadTemplates from "../../backend/loadingTemplates";
+import { LinesContext } from "../../../boards/Templates";
 
 export default function TemplateSelect() {
   const { templateID, setTemplateID } = useContext(TemplateContextID);
@@ -50,7 +50,7 @@ export default function TemplateSelect() {
   return (
     <CategoryContext.Provider value={{ category, setCategory }}>
 
-      <div className="flex flex-col gap-2 w-[40%] h-[100%] border-2 border-amber-500">
+      <div className="flex flex-col gap-2 w-[40%] h-[100%]">
         <CategorySelect />
         <div className="w-full max-w-md">
           {/* Search bar */}
@@ -98,7 +98,9 @@ export default function TemplateSelect() {
                   onMouseEnter={() => setActiveIdx(idx)}
                   onClick={() => {
                     setTemplateID(item.id);
-                    setLines({});
+                    const lines = [] as Array<string>;
+                    item.fields.forEach((field, i) => lines[i] = "");
+                    setLines(lines);
                   }}
                   className={`flex flex-row justify-between px-3 py-2 cursor-pointer ${idx === activeIdx ? "bg-gray-100" : ""
                     }`}
@@ -140,6 +142,7 @@ export default function TemplateSelect() {
                 setTemplateID(0);
                 setSearchTerm("");
                 setCategory("Select Category");
+                setLines([]);
               }}
               className="text-sm cursor-pointer text-red-500 hover:underline"
               aria-label="Clear search"
